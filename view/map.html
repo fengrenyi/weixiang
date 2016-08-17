@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>深圳市全容电子商务有限公司地图</title>
+<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.2"></script> -->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FCe04b13e8aa48eda02f789070ea8ff8"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css">
+
+</head>
+<body>
+<div style="width:1200px;height:560px;" id="container"></div>
+</body>
+</html>
+<script type="text/javascript">
+
+    //参数设置
+    var mapData = {
+      lonLat:"114.031449,22.533071",//经纬度
+      title:"深圳市全容电子商务有限公司",//标题
+      site:"深圳市 福田区 车公庙天安数码城天吉大厦CD座4楼D",//地址
+      phone:"400 666 0360 "//电话
+    }
+
+    //分解经纬度
+    var lonLat=mapData.lonLat.split(","),lon = lat = '';
+  for(var i=0;i<lonLat.length;i++){
+    if (i == 0) {lon = parseFloat(lonLat[i])}else if (i == 1) {lat = parseFloat(lonLat[i])}
+  }
+
+    //初始化地图
+    var map;
+    initMap();
+
+    //创建和初始化地图
+    function initMap(){
+      createMap();//创建地图
+      setMapEvent();//设置地图事件
+      addMapControl();//向地图添加控件
+      addMapPopup();//向地图添加自定义弹框
+    }
+
+    //创建地图
+    function createMap(){ 
+        map =new BMap.Map("container");
+    map.centerAndZoom(new BMap.Point(lon,lat), 19);
+
+    //去掉左下角文字(是否涉及版权问题？)
+    // map.addEventListener("tilesloaded",function(){//地图加载完毕
+    //  document.getElementsByClassName("BMap_cpyCtrl")[0].style.display="none";
+    // });
+    
+  };
+
+  //设置地图事件
+  function setMapEvent(){
+      map.enableScrollWheelZoom();
+      map.enableKeyboard();
+      map.enableDragging();
+      map.enableDoubleClickZoom();
+    }
+   
+
+    //向地图添加控件
+    function addMapControl(){
+     var scaleControl = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+      scaleControl.setUnit(BMAP_UNIT_METRIC);
+      map.addControl(scaleControl);
+      var navControl = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:0});
+      map.addControl(navControl);
+      var overviewControl = new BMap.OverviewMapControl({anchor:BMAP_ANCHOR_BOTTOM_RIGHT,isOpen:true});
+      map.addControl(overviewControl);
+    }
+
+    //向地图添加自定义弹框
+    function addMapPopup(){
+    //  var myIcon =new BMap.Icon("http://api.map.baidu.com/images/marker_red_sprite.png", new BMap.Size(19, 50), {    //小车图片
+      //   offset: new BMap.Size(0, 0),    //相当于CSS精灵
+      //   imageOffset: new BMap.Size(0,0)    //图片的偏移量。为了是图片底部中心对准坐标点。
+      // });
+      //var points = [new BMap.Point(lon,lat)];   //坐标点
+      //var marker =new BMap.Marker(points[0],{icon:myIcon});  // 自定义坐标点
+  
+    
+    var marker = new BMap.Marker(new BMap.Point(lon,lat)); //创建marker对象
+    map.addOverlay(marker); // 将标注添加到地图中
+
+    var opts1 = {
+      // width:270,
+      // height:70,
+      title : '<span style="color:#CC5522;font-weight: bold;font-size: 15px;margin-top:5px;display:block;">'+ mapData.title +'</span>'
+    };//设置窗口宽高与标题
+
+
+    var infoWindow =new BMap.InfoWindow("<div style='line-height:1.8em;font-size:12px;'>地址: "+ mapData.site +"</br>电话: "+ mapData.phone +"</div><a href='javascript:;' style='font-size: 12px;float:right;*float:left;*margin-left:280px;color: rgb(61, 109, 204);text-decoration: none;' onclick='searchInfoWindow.open(new BMap.Point("+ lon +","+ lat +"))'>详情»</a>", opts1);  // 创建信息窗口对象，引号里可以书写任意的html语句。
+
+    marker.openInfoWindow(infoWindow);
+    marker.addEventListener("click", function(){this.openInfoWindow(infoWindow);});
+    }
+    
+
+     var content = '<div style="margin:0;line-height:20px;padding:2px;">地址: '+ mapData.site +'<br/>电话: '+ mapData.phone +'</div>';
+       //创建检索信息窗口对象
+      var searchInfoWindow = null;
+    searchInfoWindow = new BMapLib.SearchInfoWindow(map, content, {
+        title  : mapData.title,      //标题
+        width  : 300,             //宽度
+      //  height : 50,              //高度
+        panel  : "panel",         //检索结果面板
+        enableAutoPan : true,     //自动平移
+        searchTypes   :[
+          BMAPLIB_TAB_SEARCH,   //周边检索
+          BMAPLIB_TAB_TO_HERE,  //到这里去
+          BMAPLIB_TAB_FROM_HERE //从这里出发
+        ]
+    });
+
+
+</script>
